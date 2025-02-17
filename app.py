@@ -2,6 +2,12 @@ from flask import Flask, request, jsonify
 import uuid
 import math
 from datetime import datetime
+import logging
+
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s'
+)
 
 app = Flask(__name__)
 
@@ -42,17 +48,22 @@ def calculate_points(receipt):
 
 @app.route('/receipts/process', methods=['POST'])
 def process_receipt():
+    logging.info("processing receipt...")
     receipt = request.json
     receipt_id = str(uuid.uuid4())
     points = calculate_points(receipt)
     receipts_db[receipt_id] = points
+    logging.info(f"receipt porcessed successfully. ID: {receipt_id}, Points: {points}")
     return jsonify({"id": receipt_id})
 
 @app.route('/receipts/<id>/points', methods=['GET'])
 def get_points(id):
+    logging.info(f"fetching points for receipt ID: {id}")
     points = receipts_db.get(id)
     if points is None:
+        logging.warning(f"receipt not found of ID: {id}")
         return jsonify({"error": "Receipt not found"}), 404
+    logging.info(f"points retrieved successfully. ID: {id}, Points: {points}")
     return jsonify({"points": points})
 
 if __name__ == '__main__':
