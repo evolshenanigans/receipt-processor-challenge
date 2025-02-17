@@ -7,17 +7,25 @@
    ```
 
 2.create and activate a venv
+```bash
     python3 -m venv venv
     source venv/bin/activate
+```
 
 3. install dependencies:
+   ```bash
     pip install -r requirements.txt
-4. run flask app:
+   ```
+5. run flask app:
+```bash
   python app.py
+```
 
 Docker Setup
 Build the Docker image:
+```bash
 docker build -t receipt-service .
+```
 
 Run the Docker container:
 docker run -p 5000:5000 receipt-service
